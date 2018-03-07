@@ -25,7 +25,7 @@ switch ($action) {
         if ($count == 0)
             {          
             $randomnumber = mt_rand(111111, 999999);
-            $res = mysql_query("INSERT INTO tbl_member (user_id, user_name, pass_word, email, location, status, reg_no, online) VALUES ('$user', '$fullname', '$password', '$email', '$location', 'M', $randomnumber, 'N')");
+            $res = mysql_query("INSERT INTO tbl_member (user_id, user_name, pass_word, email, location, reg_status, reg_no, online) VALUES ('$user', '$fullname', '$password', '$email', '$location', 'M', $randomnumber, 'N')");
 
             $to      = $email;
             $subject = 'Your registration';
@@ -46,7 +46,7 @@ switch ($action) {
         $regno = $_GET["RegNo"];
         $mail=$_GET["Mail"];
       
-        $q = mysql_query("SELECT * FROM tbl_member WHERE email = '$mail' and reg_no = $regno and status = 'M'");
+        $q = mysql_query("SELECT * FROM tbl_member WHERE email = '$mail' and reg_no = $regno and reg_status = 'M'");
         $count=mysql_num_rows($q);
       
         if ($count == 0)
@@ -54,7 +54,7 @@ switch ($action) {
             print json_encode ("This registration is not valid / mail address is already registered");
             }          
         else {
-            $res=mysql_query("UPDATE tbl_member SET status = 'R' WHERE email = '$mail' and reg_no =$regno");
+            $res=mysql_query("UPDATE tbl_member SET reg_status = 'R' WHERE email = '$mail' and reg_no =$regno");
             echo("$mail is registered now :-)");
             }
         break;
