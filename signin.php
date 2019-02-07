@@ -1,36 +1,58 @@
-<?
-$host = "mysql16.000webhost.com";
-$db = "a1438837_db";
-$user = "a1438837_id";
-$pw = "a1438837";
+<?php
+    require 'db.php';
+    try
+    {
+        if (!isset($_GET['user_id']) || empty($_GET['user_id']) || 
+            !isset($_GET['password']) || empty($_GET['password']))
+        {
+            print json_encode("Parameter Error");
+            exit;
+        }        
+        $uid = $mysqli->escape_string($_GET["user_id"]);
+        $pwd = $mysqli->escape_string($_GET["password"]);
 
-$con = mysql_connect($host, $user, $pw) or die(mysql_error());
-mysql_select_db($db) or die(mysql_error());
-mysql_query("SET CHARACTER SET utf8");
-mysql_query("SET NAMES 'utf8'");
-
-$uid = mysql_real_escape_string($_GET["user_id"]);
-$pwd = mysql_real_escape_string($_GET["password"]);
-
-$res = mysql_query("SELECT user_name, reg_status FROM tbl_member WHERE user_id = '$uid' AND pass_word = '$pwd'");
-if (!$res) {
-    print json_encode("Error");
-    echo "<br />" . mysql_error();
-    exit;
-}
-else {
-    if (mysql_num_rows($res) == 0) {
-        print json_encode("Not Found");
-        exit;
+        $sql = "SELECT user_name, reg_status";
+        $sql .= " FROM tbl_member";
+        $sql .= " WHERE user_id = '".$uid."'";
+        $sql .= " AND pass_word = '".$pwd."'";
+        $result = $mysqli->query($sql);
+        if ($mysqli->errno)
+        {
+            print json_encode("Error");
+            echo "<br />" . $mysqli->error;
+            exit;
+        }
+        else
+        {
+            if ($result->num_rows == 0)
+            {
+                print json_encode("Not Found");
+                exit;
+            }
+            $row = $result->fetch_row();
+            if ($row[1] == "M")
+            {
+                print json_encode("Not Activated");
+            }
+            else
+            {
+                print json_encode($row[0]);
+                $sql = "UPDATE tbl_member";
+                $sql .= " SET Online = 'N'";
+                $sql .= " WHERE now()-time_stamp > 60";            
+                $mysqli->query($sql);
+                $sql = "UPDATE tbl_member";
+                $sql .= " SET logins = logins + 1,";
+                $sql .= " Online = 'Y',";
+                $sql .= " time_stamp = now()";
+                $sql .= " WHERE user_id = '$uid'";
+                $mysqli->query($sql);
+            }
+        }
     }
-    $row = mysql_fetch_row($res);
-    if ($row[1] == "M") {
-        print json_encode("Not Activated");
-    }
-    else {    
-        print json_encode($row[0]);
-        $res = mysql_query("UPDATE tbl_member SET Online = 'N' WHERE now()-time_stamp > 60");
-        $res = mysql_query("UPDATE tbl_member SET logins = logins + 1, Online = 'Y', time_stamp = now() WHERE user_id = '$uid'");    
-    }
-}
-?>				
+    catch (Exception $e)
+    {
+        echo 'Caught exception: ',  $e->getMessage(), "\n";
+        print json_encode("Failed");
+    }    
+?>
