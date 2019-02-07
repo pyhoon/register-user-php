@@ -1,24 +1,34 @@
-<?
-$host = "mysql16.000webhost.com";
-$db = "a1438837_db";
-$user = "a1438837_id";
-$pw = "a1438837";
-
-$con = mysql_connect($host, $user, $pw) or die(mysql_error());
-mysql_select_db($db) or die(mysql_error());
-mysql_query("SET CHARACTER SET utf8");
-mysql_query("SET NAMES 'utf8'");
-
-$uid = mysql_real_escape_string($_GET["user_id"]);
-
-$res = mysql_query("SELECT online FROM tbl_member WHERE user_id = '$uid'");
-$count = mysql_num_rows($res);
-
-if ($count == 0) {
-  print json_encode ("NotMember");
-}
-else {
-    $res = mysql_query("UPDATE tbl_member SET online = 'N' WHERE user_id = '$uid'");
-    print json_encode ("LoggedOut");
-}
+<?php
+    require 'db.php';
+    try
+    {
+        if(!isset($_GET['user_id']) || empty($_GET['user_id']))
+        {
+            print json_encode("Parameter Error");
+            exit;
+        }        
+        $uid = $mysqli->escape_string($_GET["user_id"]);
+        $sql = "SELECT online";
+        $sql .= " FROM tbl_member";
+        $sql .= " WHERE user_id = '$uid'";
+		$result = $mysqli->query($sql);
+		$count = $result->num_rows;
+		if ($count == 0)
+		{
+  			print json_encode("NotMember");
+		}
+		else
+		{
+			$sql = "UPDATE tbl_member";
+			$sql .= " SET online = 'N'";
+			$sql .= " WHERE user_id = '".$uid."'";
+    		$mysqli->query($sql);
+    		print json_encode("LoggedOut");
+		}
+	}
+    catch (Exception $e)
+    {
+        echo 'Caught exception: ',  $e->getMessage(), "\n";
+        print json_encode("Failed");
+    }	
 ?>
