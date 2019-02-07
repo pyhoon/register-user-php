@@ -1,5 +1,3 @@
 <?php
-
-print json_encode ("Connected");
- 
+	print json_encode("Connected");
 ?>
