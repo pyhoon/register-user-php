@@ -19,7 +19,7 @@
         if ($mysqli->errno)
         {
             print json_encode("Error");
-            echo "<br />" . $mysqli->error;
+            echo "<br />".$mysqli->error;
             exit;
         }
         else
@@ -52,7 +52,7 @@
     }
     catch (Exception $e)
     {
-        echo 'Caught exception: ',  $e->getMessage(), "\n";
         print json_encode("Failed");
+        echo '<br />Caught exception: '.$e->getMessage()."\n";
     }    
 ?>
