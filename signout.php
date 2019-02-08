@@ -28,7 +28,7 @@
 	}
     catch (Exception $e)
     {
-        echo 'Caught exception: ',  $e->getMessage(), "\n";
         print json_encode("Failed");
+        echo '<br />Caught exception: '.$e->getMessage()."\n";
     }	
 ?>
