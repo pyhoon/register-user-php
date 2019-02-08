@@ -1,2 +1,2 @@
 # Register-User-PHP
-PHP scripts connect to MySQL database and return JSON using HttpUtils2
+Web service connect to MySQL database and return JSON API for Register User B4A Android App
