@@ -95,7 +95,7 @@
                     $sql .= " AND reg_no = $regno";
                     $mysqli->query($sql);
                     echo("$mail is registered now :-)");
-                    print json_encode("Success");
+                    // print json_encode("Success");
                 }
                 break;
             default:
