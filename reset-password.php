@@ -57,16 +57,15 @@
                     $message .= "If this action is not requested by you,";
                     $message .= " please ignore this email.\r\n";
                     $message .= "Otherwise, click the link below:\r\n";
-                    $message .= "http://demo.computerise.my/b4a/register-user-php/";
-                    $message .= "reset-password.php?Action=ConfirmPasswordReset";
-                    $message .= "&Mail=" . $email;
-                    $message .= "&Code=" . $verify_code . "\r\n\r\n";
+                    $message .= $server."reset-password.php?Action=ConfirmPasswordReset";
+                    $message .= "&Mail=".$email;
+                    $message .= "&Code=".$verify_code . "\r\n\r\n";
                     $message .= "If not working, please copy the link to your browser.\r\n\r\n";
                     $message .= "Regards,\r\n";
                     $message .= "Aeric";
                     $message = wordwrap($message, 70, "\r\n");
-                    $headers = "From: no-reply@computerise.my" . "\r\n";
-                    $headers .= "Reply-To: no-reply@computerise.my\r\n";
+                    $headers = "From: ".$sender."\r\n";
+                    $headers .= "Reply-To: ".$sender."\r\n";
                     $headers .= "X-Mailer: PHP/" . phpversion();
                     mail($to, $subject, $message, $headers);
                     print json_encode("ValidEmail");
@@ -116,13 +115,13 @@
             }
             $to      = $email;
             $subject = 'Your New Password';
-            $message = "Hi " . $username . ",\r\n";
+            $message = "Hi ".$username.",\r\n";
             $message .= "Your password has been reset.";
             $message .= " Please use your new password to log in.\r\n";
             $message .= "Password: " . $default;
             $message = wordwrap($message, 70, "\r\n");
-            $headers = "From: no-reply@computerise.my" . "\r\n";
-            $headers .= "Reply-To: no-reply@computerise.my\r\n";
+            $headers = "From: ".$sender."\r\n";
+            $headers .= "Reply-To: ".$sender."\r\n";
             $headers .= "X-Mailer: PHP/" . phpversion();
             mail($to, $subject, $message, $headers);
             //print json_encode("PasswordChanged");
@@ -133,8 +132,8 @@
         }
     }
     catch (Exception $e)
-    {
-        echo 'Caught exception: ',  $e->getMessage(), "\n";
+    {        
         print json_encode("Failed");
+        echo '<br />Caught exception: '.$e->getMessage()."\n";
     }
 ?>
