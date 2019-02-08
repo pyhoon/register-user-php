@@ -48,18 +48,17 @@
                     $message = "Hi ".$user.","."\r\n";
                     $message .= "Please click on this link to finish";
                     $message .= " the registration process:";
-                    $message .= " http://demo.computerise.my/b4a/register-user-php/";
-                    $message .= "signup.php?Action=Mail";
+                    $message .= " ".$server."signup.php?Action=Mail";
                     $message .= "&Mail=".$email;
                     $message .= "&RegNo=".$randomnumber;
                     $message = wordwrap($message, 70, "\r\n");
-                    $headers = "From: mailer@computerise.my\r\n";
-                    $headers .= "Reply-To: mailer@computerise.my\r\n";
+                    $headers = "From: ".$sender."\r\n";
+                    $headers .= "Reply-To: ".$sender."\r\n";
                     $headers .= "X-Mailer: PHP/".phpversion();
 
                     mail($to, $subject, $message, $headers);
                     // Notify me of new sign up
-                    $to      = "mailer@computerise.my";
+                    $to      = $admin;
                     $subject = "New member";
                     $message = "New member (".$user.") has signed up using our demo app.";
                     mail($to, $subject, $message, $headers);
@@ -105,7 +104,7 @@
     }
     catch (Exception $e)
     {
-        echo 'Caught exception: ',  $e->getMessage(), "\n";
         print json_encode("Failed");
+        echo '<br />Caught exception: '.$e->getMessage()."\n";
     }       
 ?>
